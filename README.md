@@ -41,7 +41,7 @@ This project is a simple RESTful API built using **Node.js** and **Express** to 
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/tuyizereerneste/inventory-management-api.git
+   git clone https://github.com/tuyizereerneste/Inventory-Management-API
    cd inventory-management-api
 
 2. **Install dependencies**:
