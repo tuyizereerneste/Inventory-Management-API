@@ -42,7 +42,7 @@ This project is a simple RESTful API built using **Node.js** and **Express** to 
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/tuyizereerneste/Inventory-Management-API
-   cd inventory-management-api
+   cd Inventory-Management-API
 
 2. **Install dependencies**:
    ```bash
@@ -80,6 +80,9 @@ This project is a simple RESTful API built using **Node.js** and **Express** to 
 
  5. **Retrieve a specific product**:
    GET: `/get-product/:id`
+   
+6. **Filter products by category and quantity**: 
+   GET: `/products/filter/query`
 
    ## Example Requests
 
@@ -106,6 +109,13 @@ This project is a simple RESTful API built using **Node.js** and **Express** to 
  5. **Retrieve a specific product**:
    ```bash
    curl http://localhost:7000/get-product/id
+   ```
+
+ 6. **Filter products by category and quantity**:
+   ```bash
+   curl curl "http://localhost:7000/products/filter?quantity=10"  or
+   curl "http://localhost:7000/products/filter?category=Category%20A" (Remember to use %20 for spaces)
+
    ```
 
 # License
