@@ -76,13 +76,18 @@ This project is a simple RESTful API built using **Node.js** and **Express** to 
    DELETE: `/delete-product/:id`
 
  4. **Retrieve product list**:
-   GET: `/get-products`
+   GET: `/get-products` (Remember to add query parameters that is page and limit)
 
  5. **Retrieve a specific product**:
    GET: `/get-product/:id`
    
 6. **Filter products by category and quantity**: 
    GET: `/products/filter/query`
+
+7. **Get All Event Logs**
+   GET: `/eventLogs`
+
+
 
    ## Example Requests
 
@@ -101,9 +106,9 @@ This project is a simple RESTful API built using **Node.js** and **Express** to 
    curl -X DELETE http://localhost:7000/delete-product/id
    ```
 
- 4. **Retrieve product list**:
+ 4. **Retrieve product list with pagination**:
    ```bash
-   curl http://localhost:7000/get-products
+   curl "http://localhost:7000/get-products?page=1&limit=5"
    ```
 
  5. **Retrieve a specific product**:
@@ -116,6 +121,11 @@ This project is a simple RESTful API built using **Node.js** and **Express** to 
    curl curl "http://localhost:7000/products/filter?quantity=10"  or
    curl "http://localhost:7000/products/filter?category=Category%20A" (Remember to use %20 for spaces)
 
+   ```
+
+ 7. **Get All Event Logs**
+   ```bash
+   curl http://localhost:7000/eventLogs
    ```
 
 # License

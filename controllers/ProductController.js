@@ -35,6 +35,7 @@ class ProductController {
       }
       const product = new Product({ name, quantity, category });
       await product.save();
+      // Log the event
       await EventLogsController.logEventDirectly({ eventType: "CREATE_PRODUCT", timestamp: new Date(), user: "admin", productId: product._id, data: product, description: "Product created successfully" });
       response.status(201).json(product);
       console.log("Product created successfully");
@@ -46,24 +47,38 @@ class ProductController {
   }
 
   /**
-   * Retrieves all products from the database.
+   * Retrieves all products from the database by implementing pagination.
    *
    * @param {Object} req - Express request object.
    * @param {Object} res - Express response object.
+   * @param {Number} req.query.page - Page number.
+   * @param {Number} req.query.limit - Number of items per page.
    *
    * @returns {Promise<void>} Resolves with a JSON response containing all products.
    */
   static async getAllProducts(request, response) {
     try {
-      const products = await Product.find();
-      response.status(200).json(products);
+      const page = parseInt(request.query.page) || 1;  // Default to page 1 if not specified
+      const limit = parseInt(request.query.limit) || 10;  // Default to 10 items per page
+  
+      const skip = (page - 1) * limit;
+      
+      // Apply skip and limit in the query
+      const products = await Product.find().skip(skip).limit(limit);
+      const totalCount = await Product.countDocuments();  // Total count of products
+      const totalPages = Math.ceil(totalCount / limit);
+  
+      response.status(200).json({
+        page,
+        totalPages,
+        totalCount,
+        data: products
+      });
     } catch (error) {
-      console.error(error);
-      console.log("Failed to retrieve products");
+      console.error("Failed to retrieve paginated products:", error);
       response.status(500).json({ message: "Internal server error" });
     }
   }
-
   /**
    * Retrieves a single product by ID from the database.
    * 
@@ -113,6 +128,7 @@ class ProductController {
       }
       product.quantity = quantity;
       await product.save();
+      // Log the event
       await EventLogsController.logEventDirectly({ eventType: "UPDATE_PRODUCT", timestamp: new Date(), user: "admin", productId: product._id, data: product.quantity, description: "Product updated successfully" });
       
       response.status(200).json(product);
@@ -146,6 +162,7 @@ class ProductController {
         return response.status(400).json({ message: "Product can not be deleted its quantity is greater than zero" });
       }
       console.log("Product deleted successfully");
+      // Log the event
       await EventLogsController.logEventDirectly({ eventType: "DELETE_PRODUCT", timestamp: new Date(), user: "admin", productId: product._id, data: product, description: "Product deleted successfully" });
       response.status(200).json({ message: "Product deleted successfully" });
     } catch (error) {
