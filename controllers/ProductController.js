@@ -1,4 +1,5 @@
 import Product from "../models/Products.js";
+import EventLogsController from "./EventLogsController.js";
 
 /**
  * Controller for creating and fetching products.
@@ -34,6 +35,7 @@ class ProductController {
       }
       const product = new Product({ name, quantity, category });
       await product.save();
+      await EventLogsController.logEventDirectly({ eventType: "CREATE_PRODUCT", timestamp: new Date(), user: "admin", productId: product._id, data: product, description: "Product created successfully" });
       response.status(201).json(product);
       console.log("Product created successfully");
     } catch (error) {
@@ -111,6 +113,7 @@ class ProductController {
       }
       product.quantity = quantity;
       await product.save();
+      await EventLogsController.logEventDirectly({ eventType: "UPDATE_PRODUCT", timestamp: new Date(), user: "admin", productId: product._id, data: product.quantity, description: "Product updated successfully" });
       
       response.status(200).json(product);
       console.log("Product updated successfully");
@@ -143,6 +146,7 @@ class ProductController {
         return response.status(400).json({ message: "Product can not be deleted its quantity is greater than zero" });
       }
       console.log("Product deleted successfully");
+      await EventLogsController.logEventDirectly({ eventType: "DELETE_PRODUCT", timestamp: new Date(), user: "admin", productId: product._id, data: product, description: "Product deleted successfully" });
       response.status(200).json({ message: "Product deleted successfully" });
     } catch (error) {
       console.error(error);
