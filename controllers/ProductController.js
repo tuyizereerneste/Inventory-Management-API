@@ -1,5 +1,6 @@
 import Product from "../models/Products.js";
 import EventLogsController from "./EventLogsController.js";
+import mongoose from "mongoose";
 
 /**
  * Controller for creating and fetching products.
@@ -58,11 +59,21 @@ class ProductController {
    */
   static async getAllProducts(request, response) {
     try {
-      const page = parseInt(request.query.page) || 1;  // Default to page 1 if not specified
-      const limit = parseInt(request.query.limit) || 10;  // Default to 10 items per page
+      let page = parseInt(request.query.page);
+      let limit = parseInt(request.query.limit);
+  
+      // Default to page 1 if not specified or if the value is invalid
+      if (isNaN(page) || page < 1) {
+        page = 1;
+      }
+  
+      // Default to 10 items per page if not specified or if the value is invalid
+      if (isNaN(limit) || limit < 1) {
+        limit = 10;
+      }
   
       const skip = (page - 1) * limit;
-      
+  
       // Apply skip and limit in the query
       const products = await Product.find().skip(skip).limit(limit);
       const totalCount = await Product.countDocuments();  // Total count of products
@@ -79,6 +90,7 @@ class ProductController {
       response.status(500).json({ message: "Internal server error" });
     }
   }
+  
   /**
    * Retrieves a single product by ID from the database.
    * 
@@ -91,15 +103,21 @@ class ProductController {
   static async getProductById(request, response) {
     try {
       const { id } = request.params;
+  
+      // Check if the provided ID is a valid ObjectId
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(400).json({ message: "Invalid ID format" });
+      }
+  
       const product = await Product.findById(id);
       if (!product) {
         return response.status(404).json({ message: "Product not found" });
       }
       response.status(200).json(product);
     } catch (error) {
-        console.log("Failed to retrieve product");
-        console.error(error);
-        response.status(500).json({ message: "Internal server error" });
+      console.log("Failed to retrieve product");
+      console.error(error);
+      response.status(500).json({ message: "Internal server error" });
     }
   }
 
@@ -117,6 +135,12 @@ class ProductController {
     try {
       const { id } = request.params;
       const { quantity } = request.body;
+  
+      // Check if the provided ID is a valid ObjectId
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(400).json({ message: "Invalid ID format" });
+      }
+  
       const product = await Product.findById(id);
       if (!product) {
         console.log("Product not found");
@@ -130,7 +154,7 @@ class ProductController {
       await product.save();
       // Log the event
       await EventLogsController.logEventDirectly({ eventType: "UPDATE_PRODUCT", timestamp: new Date(), user: "admin", productId: product._id, data: product.quantity, description: "Product updated successfully" });
-      
+  
       response.status(200).json(product);
       console.log("Product updated successfully");
     } catch (error) {
@@ -152,19 +176,26 @@ class ProductController {
   static async deleteProduct(request, response) {
     try {
       const { id } = request.params;
-      const product = await Product.findByIdAndDelete(id);
+  
+      // Check if the provided ID is a valid ObjectId
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(400).json({ message: "Invalid ID format" });
+      }
+  
+      const product = await Product.findById(id);
       if (!product) {
         console.log("Product not found");
         return response.status(404).json({ message: "Product not found" });
       }
       if (product.quantity > 0) {
-        console.log("Product can not be deletedits quantity is greater than zero");
+        console.log("Product can not be deleted its quantity is greater than zero");
         return response.status(400).json({ message: "Product can not be deleted its quantity is greater than zero" });
       }
+      await Product.findByIdAndDelete(id);
       console.log("Product deleted successfully");
       // Log the event
       await EventLogsController.logEventDirectly({ eventType: "DELETE_PRODUCT", timestamp: new Date(), user: "admin", productId: product._id, data: product, description: "Product deleted successfully" });
-      response.status(200).json({ message: "Product deleted successfully" });
+      response.status(201).json({ message: "Product deleted successfully" });
     } catch (error) {
       console.error(error);
       console.log("Failed to delete product");
