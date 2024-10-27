@@ -1,8 +1,7 @@
 import * as chai from 'chai';
 import supertest from 'supertest';
-import app from '../server.js'; // Adjust the path if necessary
-import EventLogs from '../models/EventLogs.js'; // Adjust the path to your EventLogs model
-//import mongoose from 'mongoose';
+import app from '../server.js';
+import EventLogs from '../models/EventLogs.js';
 
 const { expect } = chai;
 const request = supertest(app);
