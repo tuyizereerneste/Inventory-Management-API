@@ -19,14 +19,14 @@ class ProductFilter {
         const { category, quantity } = filters;
         const query = {};
         
-        // Add quantity filter if provided
         if (quantity) {
             query.quantity = { $lt: Number(quantity) };
         }
 
         // Add category filter if provided
         if (category) {
-            query.category = { $regex: new RegExp(category, 'i') }; // Case-insensitive regex
+            // Case-insensitive regex search for category
+            query.category = { $regex: new RegExp(category, 'i') };
         }
 
         // Query the products collection based on the built filter
@@ -48,7 +48,6 @@ class ProductFilter {
        const { category, quantity } = request.query;
 
        try {
-           // Call the filterProducts method with the filters from the query
            const filteredProducts = await ProductFilter.filterProducts({ category, quantity });
            console.log('Filtered Products:', filteredProducts);
            response.status(200).json(filteredProducts);
