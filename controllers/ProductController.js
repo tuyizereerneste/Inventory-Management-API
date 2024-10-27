@@ -62,21 +62,18 @@ class ProductController {
       let page = parseInt(request.query.page);
       let limit = parseInt(request.query.limit);
   
-      // Default to page 1 if not specified or if the value is invalid
       if (isNaN(page) || page < 1) {
         page = 1;
       }
   
-      // Default to 10 items per page if not specified or if the value is invalid
       if (isNaN(limit) || limit < 1) {
         limit = 10;
       }
   
       const skip = (page - 1) * limit;
   
-      // Apply skip and limit in the query
       const products = await Product.find().skip(skip).limit(limit);
-      const totalCount = await Product.countDocuments();  // Total count of products
+      const totalCount = await Product.countDocuments();
       const totalPages = Math.ceil(totalCount / limit);
   
       response.status(200).json({
