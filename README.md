@@ -39,9 +39,12 @@ This project is a simple RESTful API built using **Node.js** and **Express** to 
 
 ## Installation
 
+0. **Project Repository**
+    ### https://github.com/tuyizereerneste/Inventory-Management-API
+
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/tuyizereerneste/Inventory-Management-API
+   git clone git@github.com:tuyizereerneste/Inventory-Management-API.git
    cd Inventory-Management-API
 
 2. **Install dependencies**:
@@ -63,6 +66,11 @@ This project is a simple RESTful API built using **Node.js** and **Express** to 
    npm run dev
    ```
 
+5. **Run Tests**
+   ```bash
+   npm run test
+   ```
+
 # Usage
 ## API Endpoints
 
@@ -82,7 +90,7 @@ This project is a simple RESTful API built using **Node.js** and **Express** to 
    GET: `/get-product/:id`
    
 6. **Filter products by category and quantity**: 
-   GET: `/products/filter/query`
+   GET: `/products/filter`
 
 7. **Get All Event Logs**
    GET: `/eventLogs`
@@ -93,39 +101,39 @@ This project is a simple RESTful API built using **Node.js** and **Express** to 
 
  1. **Add a new product**:
    ```bash
-   curl -X POST -H "Content-Type: application/json" -d '{"name": "Product 1", "quantity": 10, "category": "Category 1"}' http://localhost:7000/create-product
+   curl -X POST -H "Content-Type: application/json" -d '{"name": "Product 1", "quantity": 10, "category": "Category 1"}' http://localhost:3000/create-product
    ```
 
  2. **Update product quantity**:
    ```bash
-   curl -X PUT -H "Content-Type: application/json" -d '{"quantity": 5}' http://localhost:7000/update-product/id
+   curl -X PUT -H "Content-Type: application/json" -d '{"quantity": 5}' http://localhost:3000/update-product/id
    ```
 
  3. **Delete a product**:
    ```bash
-   curl -X DELETE http://localhost:7000/delete-product/id
+   curl -X DELETE http://localhost:3000/delete-product/id
    ```
 
  4. **Retrieve product list with pagination**:
    ```bash
-   curl "http://localhost:7000/get-products?page=1&limit=5"
+   curl "http://localhost:3000/get-products?page=1&limit=5"
    ```
 
  5. **Retrieve a specific product**:
    ```bash
-   curl http://localhost:7000/get-product/id
+   curl http://localhost:3000/get-product/id
    ```
 
  6. **Filter products by category and quantity**:
    ```bash
-   curl curl "http://localhost:7000/products/filter?quantity=10"  or
-   curl "http://localhost:7000/products/filter?category=Category%20A" (Remember to use %20 for spaces)
+   curl "http://localhost:3000/products/filter?quantity=10"  or
+   curl "http://localhost:3000/products/filter?category=Category%20A" (Remember to use %20 for spaces)
 
    ```
 
  7. **Get All Event Logs**
    ```bash
-   curl http://localhost:7000/eventLogs
+   curl http://localhost:3000/eventLogs
    ```
 
 # License
